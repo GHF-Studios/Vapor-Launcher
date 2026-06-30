@@ -1,0 +1,6 @@
+[package]
+name = "vapor_launcher_cli"
+version.workspace = true
+edition.workspace = true
+
+[dependencies]
