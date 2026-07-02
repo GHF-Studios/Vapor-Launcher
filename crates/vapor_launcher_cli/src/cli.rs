@@ -15,23 +15,31 @@ use vapor_launcher_core as core;
 
 /// Parsed top-level Launcher invocation.
 #[derive(Parser)]
-#[command(name = "vapor-launcher")]
-#[command(version, about = "Launcher workflows for Vapor content.")]
+#[command(name = "launcher_cli")]
+#[command(version, about = "Install, compose, lock, and launch Vapor content.")]
+#[command(
+    long_about = "Launcher CLI for player and modpack-author workflows. Use it to inspect content, install packagepacks and dependencies, manage local mutable packs, lock the selected packagepack, and launch the selected experience."
+)]
+#[command(
+    arg_required_else_help = true,
+    subcommand_required = true,
+    propagate_version = true
+)]
 pub(crate) struct Cli {
     /// Show operation planning, diagnostics, historical context, and live detail.
-    #[arg(long, global = true)]
+    #[arg(long, help_heading = "Output")]
     verbose: bool,
-    /// Accept non-destructive prompts such as dependency-closure installation.
-    #[arg(long, global = true)]
+    /// Accept prompts automatically for commands that otherwise stop for confirmation.
+    #[arg(long, help_heading = "Prompt Control")]
     yes: bool,
     /// Permit destructive or risk-bearing operations when that command supports it.
-    #[arg(long, global = true)]
+    #[arg(long, help_heading = "Prompt Control")]
     force: bool,
     /// Reject local pack mutations that would leave the pack invalid.
-    #[arg(long, global = true)]
+    #[arg(long, help_heading = "Prompt Control")]
     strict: bool,
     /// Keep old unused installed versions after update, lock, repair, or cleanup.
-    #[arg(long, global = true)]
+    #[arg(long, help_heading = "Prompt Control")]
     keep_unused_versions: bool,
     #[command(subcommand)]
     command: Command,
