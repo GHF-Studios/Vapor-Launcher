@@ -1,8 +1,14 @@
 //! Placeholder output for parsed launcher commands.
 
-use vapor_launcher_core::{CommandSpec, GlobalOptions};
+use vapor_launcher_core::{GlobalOptions, LauncherCommand};
 
-pub(crate) fn print_stub(globals: GlobalOptions, spec: CommandSpec) {
+pub(crate) fn print_stub(
+    globals: GlobalOptions,
+    command: &LauncherCommand,
+) -> Result<(), Box<dyn std::error::Error>> {
+    let spec = vapor_launcher_core::describe_command(command);
+    crate::safety::guard(globals, command, &spec)?;
+
     println!(
         "Doing {}! Trust me, I am definitely doing it and not just a placeholder message.",
         spec.action
@@ -18,6 +24,8 @@ pub(crate) fn print_stub(globals: GlobalOptions, spec: CommandSpec) {
         println!("strict: {}", globals.strict);
         println!("keep_unused_versions: {}", globals.keep_unused_versions);
     }
+
+    Ok(())
 }
 
 fn print_lines(label: &str, lines: &[&str]) {

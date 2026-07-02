@@ -2,14 +2,14 @@
 
 mod args;
 mod leaf;
-mod packagepack;
 mod pack;
+mod packagepack;
 mod repair;
 
 use clap::{Parser, Subcommand};
 use leaf::LeafCommand;
-use packagepack::PackagepackCommand;
 use pack::PackCommand;
+use packagepack::PackagepackCommand;
 use repair::RepairCommand;
 use vapor_launcher_core as core;
 
@@ -58,28 +58,58 @@ enum Command {
     /// Summarize Launcher health, selected packagepack, and local state.
     Status,
     /// Inspect, plan, or apply repairs to Launcher-managed state.
-    Repair { #[command(subcommand)] command: RepairCommand },
+    Repair {
+        #[command(subcommand)]
+        command: RepairCommand,
+    },
     /// Work with packagepacks, including root selection and packagepack locking.
-    Packagepack { #[command(subcommand)] command: PackagepackCommand },
+    Packagepack {
+        #[command(subcommand)]
+        command: PackagepackCommand,
+    },
     /// Work with enginepacks as installed content or local mutable packs.
-    Enginepack { #[command(subcommand)] command: PackCommand },
+    Enginepack {
+        #[command(subcommand)]
+        command: PackCommand,
+    },
     /// Work with gamepacks as installed content or local mutable packs.
-    Gamepack { #[command(subcommand)] command: PackCommand },
+    Gamepack {
+        #[command(subcommand)]
+        command: PackCommand,
+    },
     /// Work with modpacks as installed content or local mutable packs.
-    Modpack { #[command(subcommand)] command: PackCommand },
+    Modpack {
+        #[command(subcommand)]
+        command: PackCommand,
+    },
     /// Work with installed engine content.
-    Engine { #[command(subcommand)] command: LeafCommand },
+    Engine {
+        #[command(subcommand)]
+        command: LeafCommand,
+    },
     /// Work with installed game content.
-    Game { #[command(subcommand)] command: LeafCommand },
+    Game {
+        #[command(subcommand)]
+        command: LeafCommand,
+    },
     /// Work with installed engine mod content.
     #[command(name = "engine_mod")]
-    EngineMod { #[command(subcommand)] command: LeafCommand },
+    EngineMod {
+        #[command(subcommand)]
+        command: LeafCommand,
+    },
     /// Work with installed game mod content.
     #[command(name = "game_mod")]
-    GameMod { #[command(subcommand)] command: LeafCommand },
+    GameMod {
+        #[command(subcommand)]
+        command: LeafCommand,
+    },
     /// Work with installed extension mod content.
     #[command(name = "extension_mod")]
-    ExtensionMod { #[command(subcommand)] command: LeafCommand },
+    ExtensionMod {
+        #[command(subcommand)]
+        command: LeafCommand,
+    },
     /// Lock the currently selected packagepack.
     Lock,
     /// Launch the currently selected packagepack.
@@ -112,9 +142,15 @@ impl Command {
 }
 
 fn pack_command(pack_type: core::ContentType, command: PackCommand) -> core::LauncherCommand {
-    core::LauncherCommand::Pack { pack_type, command: command.into_core() }
+    core::LauncherCommand::Pack {
+        pack_type,
+        command: command.into_core(),
+    }
 }
 
 fn leaf_command(content_type: core::ContentType, command: LeafCommand) -> core::LauncherCommand {
-    core::LauncherCommand::Leaf { content_type, command: command.into_core() }
+    core::LauncherCommand::Leaf {
+        content_type,
+        command: command.into_core(),
+    }
 }

@@ -1,6 +1,6 @@
 //! Launcher repair command specifications.
 
-use super::{spec, CommandSpec, StateSurface};
+use super::{CommandSpec, StateSurface, spec};
 use crate::repair::RepairCommand;
 
 pub(super) fn describe(command: &RepairCommand) -> CommandSpec {

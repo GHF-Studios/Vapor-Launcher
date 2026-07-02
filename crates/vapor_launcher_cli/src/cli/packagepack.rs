@@ -28,7 +28,10 @@ pub(super) enum PackagepackCommand {
     /// Create a blank local mutable packagepack.
     New { packagepack_id: String },
     /// Create a local mutable packagepack from an existing source packagepack.
-    Fork { source_pack_id: String, new_pack_id: String },
+    Fork {
+        source_pack_id: String,
+        new_pack_id: String,
+    },
     /// Select the root packagepack, or select child content inside a local mutable packagepack.
     Select {
         packagepack_id: String,
@@ -36,37 +39,91 @@ pub(super) enum PackagepackCommand {
         child_content_id: Option<String>,
     },
     /// Add child content to a local mutable packagepack.
-    Add { packagepack_id: String, child_content_type: ContentType, child_content_id: String },
+    Add {
+        packagepack_id: String,
+        child_content_type: ContentType,
+        child_content_id: String,
+    },
     /// Remove child content from a local mutable packagepack.
-    Remove { packagepack_id: String, child_content_type: ContentType, child_content_id: String },
+    Remove {
+        packagepack_id: String,
+        child_content_type: ContentType,
+        child_content_id: String,
+    },
     /// Keep child content present but inactive inside a local mutable packagepack.
-    Unselect { packagepack_id: String, child_content_type: ContentType, child_content_id: String },
+    Unselect {
+        packagepack_id: String,
+        child_content_type: ContentType,
+        child_content_id: String,
+    },
 }
 
 impl PackagepackCommand {
     pub(super) fn into_core(self) -> Result<core::PackagepackCommand, String> {
         Ok(match self {
-            Self::List { source } => read(core::ContentReadCommand::List { source: source.into() }),
-            Self::Status { packagepack_id } => read(core::ContentReadCommand::Status { content_id: packagepack_id }),
-            Self::Fingerprint { packagepack_id } => read(core::ContentReadCommand::Fingerprint { content_id: packagepack_id }),
-            Self::Inspect { packagepack_id } => read(core::ContentReadCommand::Inspect { content_id: packagepack_id }),
-            Self::Validate { packagepack_id } => read(core::ContentReadCommand::Validate { content_id: packagepack_id }),
+            Self::List { source } => read(core::ContentReadCommand::List {
+                source: source.into(),
+            }),
+            Self::Status { packagepack_id } => read(core::ContentReadCommand::Status {
+                content_id: packagepack_id,
+            }),
+            Self::Fingerprint { packagepack_id } => read(core::ContentReadCommand::Fingerprint {
+                content_id: packagepack_id,
+            }),
+            Self::Inspect { packagepack_id } => read(core::ContentReadCommand::Inspect {
+                content_id: packagepack_id,
+            }),
+            Self::Validate { packagepack_id } => read(core::ContentReadCommand::Validate {
+                content_id: packagepack_id,
+            }),
             Self::Lock { packagepack_id } => core::PackagepackCommand::Lock { packagepack_id },
-            Self::Install { packagepack_id } => installed(core::LauncherInstallCommand::Install { content_id: packagepack_id }),
-            Self::Uninstall { packagepack_id } => installed(core::LauncherInstallCommand::Uninstall { content_id: packagepack_id }),
-            Self::Update { packagepack_id } => installed(core::LauncherInstallCommand::Update { content_id: packagepack_id }),
-            Self::New { packagepack_id } => local(core::LauncherLocalPackCommand::New { pack_id: packagepack_id }),
-            Self::Fork { source_pack_id, new_pack_id } => local(core::LauncherLocalPackCommand::Fork { source_pack_id, new_pack_id }),
-            Self::Select { packagepack_id, child_content_type, child_content_id } => select(packagepack_id, child_content_type, child_content_id)?,
-            Self::Add { packagepack_id, child_content_type, child_content_id } => compose(core::PackCompositionCommand::Add {
+            Self::Install { packagepack_id } => installed(core::LauncherInstallCommand::Install {
+                content_id: packagepack_id,
+            }),
+            Self::Uninstall { packagepack_id } => {
+                installed(core::LauncherInstallCommand::Uninstall {
+                    content_id: packagepack_id,
+                })
+            }
+            Self::Update { packagepack_id } => installed(core::LauncherInstallCommand::Update {
+                content_id: packagepack_id,
+            }),
+            Self::New { packagepack_id } => local(core::LauncherLocalPackCommand::New {
+                pack_id: packagepack_id,
+            }),
+            Self::Fork {
+                source_pack_id,
+                new_pack_id,
+            } => local(core::LauncherLocalPackCommand::Fork {
+                source_pack_id,
+                new_pack_id,
+            }),
+            Self::Select {
+                packagepack_id,
+                child_content_type,
+                child_content_id,
+            } => select(packagepack_id, child_content_type, child_content_id)?,
+            Self::Add {
+                packagepack_id,
+                child_content_type,
+                child_content_id,
+            } => compose(core::PackCompositionCommand::Add {
                 pack_id: packagepack_id,
                 child: super::args::child(child_content_type, child_content_id),
             }),
-            Self::Remove { packagepack_id, child_content_type, child_content_id } => compose(core::PackCompositionCommand::Remove {
+            Self::Remove {
+                packagepack_id,
+                child_content_type,
+                child_content_id,
+            } => compose(core::PackCompositionCommand::Remove {
                 pack_id: packagepack_id,
                 child: super::args::child(child_content_type, child_content_id),
             }),
-            Self::Unselect { packagepack_id, child_content_type, child_content_id } => compose(core::PackCompositionCommand::Unselect {
+            Self::Unselect {
+                packagepack_id,
+                child_content_type,
+                child_content_id,
+            } => compose(core::PackCompositionCommand::Unselect {
                 pack_id: packagepack_id,
                 child: super::args::child(child_content_type, child_content_id),
             }),
@@ -97,10 +154,15 @@ fn select(
 ) -> Result<core::PackagepackCommand, String> {
     match (child_content_type, child_content_id) {
         (None, None) => Ok(core::PackagepackCommand::SelectRoot { packagepack_id }),
-        (Some(content_type), Some(content_id)) => Ok(compose(core::PackCompositionCommand::Select {
-            pack_id: packagepack_id,
-            child: super::args::child(content_type, content_id),
-        })),
-        _ => Err("packagepack select needs either only <PACKAGEPACK_ID> or both child arguments".to_owned()),
+        (Some(content_type), Some(content_id)) => {
+            Ok(compose(core::PackCompositionCommand::Select {
+                pack_id: packagepack_id,
+                child: super::args::child(content_type, content_id),
+            }))
+        }
+        _ => Err(
+            "packagepack select needs either only <PACKAGEPACK_ID> or both child arguments"
+                .to_owned(),
+        ),
     }
 }

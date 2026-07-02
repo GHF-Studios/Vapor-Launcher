@@ -36,20 +36,35 @@ pub enum LauncherLocalPackCommand {
     /// Create a blank local mutable pack.
     New { pack_id: String },
     /// Create a local mutable pack from an existing source pack.
-    Fork { source_pack_id: String, new_pack_id: String },
+    Fork {
+        source_pack_id: String,
+        new_pack_id: String,
+    },
 }
 
 /// Composition mutations for local mutable packs.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum PackCompositionCommand {
     /// Add child content to a local mutable pack.
-    Add { pack_id: String, child: ChildContentRef },
+    Add {
+        pack_id: String,
+        child: ChildContentRef,
+    },
     /// Remove child content from a local mutable pack.
-    Remove { pack_id: String, child: ChildContentRef },
+    Remove {
+        pack_id: String,
+        child: ChildContentRef,
+    },
     /// Select active child content inside a local mutable pack.
-    Select { pack_id: String, child: ChildContentRef },
+    Select {
+        pack_id: String,
+        child: ChildContentRef,
+    },
     /// Keep child content present but inactive inside a local mutable pack.
-    Unselect { pack_id: String, child: ChildContentRef },
+    Unselect {
+        pack_id: String,
+        child: ChildContentRef,
+    },
 }
 
 /// Packagepack commands include both root-level user selection and local mutable pack editing.
@@ -60,9 +75,13 @@ pub enum PackagepackCommand {
     Local(LauncherLocalPackCommand),
     Compose(PackCompositionCommand),
     /// Select the active root packagepack used by root `lock` and `launch`.
-    SelectRoot { packagepack_id: String },
+    SelectRoot {
+        packagepack_id: String,
+    },
     /// Lock an explicit packagepack, selected or not.
-    Lock { packagepack_id: String },
+    Lock {
+        packagepack_id: String,
+    },
 }
 
 /// Commands shared by non-root pack types.
@@ -93,9 +112,15 @@ pub enum LauncherCommand {
     /// Work with packagepacks, including root selection and packagepack locking.
     Packagepack(PackagepackCommand),
     /// Work with pack content as installed content or local mutable packs.
-    Pack { pack_type: ContentType, command: PackCommand },
+    Pack {
+        pack_type: ContentType,
+        command: PackCommand,
+    },
     /// Work with installed leaf content.
-    Leaf { content_type: ContentType, command: LeafCommand },
+    Leaf {
+        content_type: ContentType,
+        command: LeafCommand,
+    },
     /// Lock the currently selected packagepack.
     LockSelectedPackagepack,
     /// Launch the currently selected packagepack.

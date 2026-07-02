@@ -1,9 +1,9 @@
 //! Launcher content command specifications.
 
-use super::{spec, CommandSpec, StateSurface};
+use super::{CommandSpec, StateSurface, spec};
 use crate::commands::{
-    ContentReadCommand, LauncherInstallCommand, LauncherLocalPackCommand, LeafCommand,
-    PackagepackCommand, PackCommand, PackCompositionCommand,
+    ContentReadCommand, LauncherInstallCommand, LauncherLocalPackCommand, LeafCommand, PackCommand,
+    PackCompositionCommand, PackagepackCommand,
 };
 use crate::content::ContentType;
 
@@ -13,7 +13,9 @@ pub(super) fn describe_packagepack(command: &PackagepackCommand) -> CommandSpec 
         PackagepackCommand::Installed(command) => {
             describe_installed(ContentType::Packagepack, command)
         }
-        PackagepackCommand::Local(command) => describe_local_pack(ContentType::Packagepack, command),
+        PackagepackCommand::Local(command) => {
+            describe_local_pack(ContentType::Packagepack, command)
+        }
         PackagepackCommand::Compose(command) => {
             describe_composition(ContentType::Packagepack, command)
         }
@@ -28,8 +30,14 @@ pub(super) fn describe_packagepack(command: &PackagepackCommand) -> CommandSpec 
             "launcher packagepack lock",
             "Write a persistent lock artifact for an explicit packagepack.",
             StateSurface::ActiveComposition,
-            &["packagepack is locally available", "packagepack can be resolved"],
-            &["resolve explicit packagepack", "write or update its lock artifact"],
+            &[
+                "packagepack is locally available",
+                "packagepack can be resolved",
+            ],
+            &[
+                "resolve explicit packagepack",
+                "write or update its lock artifact",
+            ],
         ),
     }
 }
@@ -58,22 +66,36 @@ fn describe_read(content_type: ContentType, command: &ContentReadCommand) -> Com
         ContentReadCommand::Inspect { .. } => "inspect",
         ContentReadCommand::Validate { .. } => "validate",
     };
-    read_spec(format!("launcher {} {action}", content_type.as_str()), "Read launcher-known content state.")
+    read_spec(
+        format!("launcher {} {action}", content_type.as_str()),
+        "Read launcher-known content state.",
+    )
 }
 
 fn describe_installed(content_type: ContentType, command: &LauncherInstallCommand) -> CommandSpec {
     let (action, summary) = match command {
-        LauncherInstallCommand::Install { .. } => ("install", "Install content and its dependency closure."),
-        LauncherInstallCommand::Uninstall { .. } => ("uninstall", "Remove installed content when dependency safety permits it."),
+        LauncherInstallCommand::Install { .. } => {
+            ("install", "Install content and its dependency closure.")
+        }
+        LauncherInstallCommand::Uninstall { .. } => (
+            "uninstall",
+            "Remove installed content when dependency safety permits it.",
+        ),
         LauncherInstallCommand::Update { .. } => ("update", "Update installed content."),
     };
-    installed_spec(format!("launcher {} {action}", content_type.as_str()), summary)
+    installed_spec(
+        format!("launcher {} {action}", content_type.as_str()),
+        summary,
+    )
 }
 
 fn describe_local_pack(pack_type: ContentType, command: &LauncherLocalPackCommand) -> CommandSpec {
     let (action, summary) = match command {
         LauncherLocalPackCommand::New { .. } => ("new", "Create a blank local mutable pack."),
-        LauncherLocalPackCommand::Fork { .. } => ("fork", "Create a local mutable pack from an existing source pack."),
+        LauncherLocalPackCommand::Fork { .. } => (
+            "fork",
+            "Create a local mutable pack from an existing source pack.",
+        ),
     };
     local_pack_spec(format!("launcher {} {action}", pack_type.as_str()), summary)
 }
@@ -92,7 +114,13 @@ fn describe_composition(pack_type: ContentType, command: &PackCompositionCommand
 }
 
 fn read_spec(action: impl Into<String>, summary: &'static str) -> CommandSpec {
-    spec(action, summary, StateSurface::ReadOnly, &[], &["display requested information"])
+    spec(
+        action,
+        summary,
+        StateSurface::ReadOnly,
+        &[],
+        &["display requested information"],
+    )
 }
 
 fn installed_spec(action: impl Into<String>, summary: &'static str) -> CommandSpec {
@@ -120,7 +148,10 @@ fn composition_spec(action: impl Into<String>, summary: &'static str) -> Command
         action,
         summary,
         StateSurface::LocalMutablePack,
-        &["target pack is a local mutable pack", "child type is allowed by the parent pack type"],
+        &[
+            "target pack is a local mutable pack",
+            "child type is allowed by the parent pack type",
+        ],
         &["update local mutable pack membership or active selection when implemented"],
     )
 }

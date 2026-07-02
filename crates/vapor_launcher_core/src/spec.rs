@@ -47,22 +47,35 @@ pub fn describe_command(command: &LauncherCommand) -> CommandSpec {
         LauncherCommand::Repair(command) => repair::describe(command),
         LauncherCommand::Packagepack(command) => content::describe_packagepack(command),
         LauncherCommand::Pack { pack_type, command } => content::describe_pack(*pack_type, command),
-        LauncherCommand::Leaf { content_type, command } => {
-            content::describe_leaf(*content_type, command)
-        }
+        LauncherCommand::Leaf {
+            content_type,
+            command,
+        } => content::describe_leaf(*content_type, command),
         LauncherCommand::LockSelectedPackagepack => spec(
             "launcher lock selected packagepack",
             "Write a persistent lock artifact for the selected packagepack.",
             StateSurface::ActiveComposition,
-            &["one packagepack is selected", "the selected packagepack can be resolved"],
-            &["resolve the selected packagepack", "write or update its lock artifact"],
+            &[
+                "one packagepack is selected",
+                "the selected packagepack can be resolved",
+            ],
+            &[
+                "resolve the selected packagepack",
+                "write or update its lock artifact",
+            ],
         ),
         LauncherCommand::LaunchSelectedPackagepack => spec(
             "launcher launch selected packagepack",
             "Launch the selected packagepack.",
             StateSurface::RuntimeLaunch,
-            &["one packagepack is selected", "the selected packagepack has a usable locked graph"],
-            &["prepare runtime inputs", "start the selected packagepack experience"],
+            &[
+                "one packagepack is selected",
+                "the selected packagepack has a usable locked graph",
+            ],
+            &[
+                "prepare runtime inputs",
+                "start the selected packagepack experience",
+            ],
         ),
     }
 }
@@ -74,5 +87,11 @@ pub(super) fn spec(
     preconditions: &'static [&'static str],
     future_effects: &'static [&'static str],
 ) -> CommandSpec {
-    CommandSpec { action: action.into(), summary, surface, preconditions, future_effects }
+    CommandSpec {
+        action: action.into(),
+        summary,
+        surface,
+        preconditions,
+        future_effects,
+    }
 }

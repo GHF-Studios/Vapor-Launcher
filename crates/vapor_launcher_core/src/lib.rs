@@ -14,10 +14,10 @@ pub mod spec;
 
 pub use commands::{
     ContentReadCommand, LauncherCommand, LauncherInstallCommand, LauncherLocalPackCommand,
-    LeafCommand, PackagepackCommand, PackCommand, PackCompositionCommand,
+    LeafCommand, PackCommand, PackCompositionCommand, PackagepackCommand,
 };
-pub use content::{allowed_pack_children, ContentSource, ContentType};
+pub use content::{ContentSource, ContentType, allowed_pack_children};
 pub use options::GlobalOptions;
 pub use repair::{RepairCommand, RepairTarget};
-pub use spec::{describe_command, CommandSpec, StateSurface};
+pub use spec::{CommandSpec, StateSurface, describe_command};
 pub use vapor_core::ChildContentRef;
