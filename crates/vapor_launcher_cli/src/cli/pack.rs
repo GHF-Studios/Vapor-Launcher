@@ -63,9 +63,7 @@ pub(super) enum PackCommand {
 impl PackCommand {
     pub(super) fn into_core(self) -> core::PackCommand {
         match self {
-            Self::List { source } => read(core::ContentReadCommand::List {
-                source: source.into(),
-            }),
+            Self::List { source } => read(core::ContentReadCommand::List { source }),
             Self::Status { pack_id } => read(core::ContentReadCommand::Status {
                 content_id: pack_id,
             }),

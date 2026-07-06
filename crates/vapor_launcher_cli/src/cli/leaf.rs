@@ -20,9 +20,9 @@ pub(super) enum LeafCommand {
 impl LeafCommand {
     pub(super) fn into_core(self) -> core::LeafCommand {
         match self {
-            Self::List { source } => core::LeafCommand::Read(core::ContentReadCommand::List {
-                source: source.into(),
-            }),
+            Self::List { source } => {
+                core::LeafCommand::Read(core::ContentReadCommand::List { source })
+            }
             Self::Status { content_id } => {
                 core::LeafCommand::Read(core::ContentReadCommand::Status { content_id })
             }
