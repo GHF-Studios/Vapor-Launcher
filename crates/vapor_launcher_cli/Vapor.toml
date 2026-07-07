@@ -1,5 +1,5 @@
 schema = 1
 
 [project]
-id = "ghf-studios/vapor-launcher/cli"
+name = "cli"
 version.workspace = true
