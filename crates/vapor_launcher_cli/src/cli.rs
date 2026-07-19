@@ -101,19 +101,19 @@ enum Command {
         command: LeafCommand,
     },
     /// Work with installed engine mod content.
-    #[command(name = "engine_mod")]
+    #[command(name = "engine-mod")]
     EngineMod {
         #[command(subcommand)]
         command: LeafCommand,
     },
     /// Work with installed game mod content.
-    #[command(name = "game_mod")]
+    #[command(name = "game-mod")]
     GameMod {
         #[command(subcommand)]
         command: LeafCommand,
     },
     /// Work with installed extension mod content.
-    #[command(name = "extension_mod")]
+    #[command(name = "extension-mod")]
     ExtensionMod {
         #[command(subcommand)]
         command: LeafCommand,
